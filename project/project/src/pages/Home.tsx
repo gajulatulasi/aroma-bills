@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { ArrowRight, Star, Award, Leaf, Heart, ShoppingBag } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 
@@ -18,7 +18,6 @@ const Home = () => {
   const [featuredPerfumes, setFeaturedPerfumes] = useState<Perfume[]>([]);
   const [loading, setLoading] = useState(true);
   const { dispatch } = useCart();
-  const navigate = useNavigate();
 
   useEffect(() => {
     fetchFeaturedPerfumes();
@@ -36,8 +35,7 @@ const Home = () => {
     }
   };
 
-  const addToCart = (e: React.MouseEvent, perfume: Perfume) => {
-    e.stopPropagation();
+  const addToCart = (perfume: Perfume) => {
     dispatch({
       type: 'ADD_ITEM',
       payload: {
@@ -48,10 +46,6 @@ const Home = () => {
         size: perfume.size
       }
     });
-  };
-
-  const handleProductClick = (perfumeId: string) => {
-    navigate(`/product/${perfumeId}`);
   };
 
   return (
@@ -135,8 +129,7 @@ const Home = () => {
               {featuredPerfumes.map((perfume) => (
                 <div 
                   key={perfume.id}
-                  onClick={() => handleProductClick(perfume.id)}
-                  className="group cursor-pointer bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 overflow-hidden border border-gray-100"
+                  className="group bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 overflow-hidden border border-gray-100"
                 >
                   <div className="relative overflow-hidden">
                     <img
@@ -146,8 +139,8 @@ const Home = () => {
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                     <button 
-                      onClick={(e) => addToCart(e, perfume)}
-                      className="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-white text-gray-900 px-6 py-2 rounded-full font-medium opacity-0 group-hover:opacity-100 transition-all duration-300 hover:bg-gold-500 hover:text-white flex items-center gap-2 z-10"
+                      onClick={() => addToCart(perfume)}
+                      className="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-white text-gray-900 px-6 py-2 rounded-full font-medium opacity-0 group-hover:opacity-100 transition-all duration-300 hover:bg-gold-500 hover:text-white flex items-center gap-2"
                     >
                       <ShoppingBag className="h-4 w-4" />
                       Add to Cart

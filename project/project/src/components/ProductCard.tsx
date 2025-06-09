@@ -1,19 +1,15 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Star, Heart, ShoppingBag } from 'lucide-react';
-import { useCart } from '../context/CartContext';
+import { Star, Heart } from 'lucide-react';
 
 interface Product {
   id: string;
   name: string;
   description: string;
   price: number;
-  image: string;
-  size: string;
-  gender: string;
-  fragranceType: string;
+  images: string[];
+  category: string;
   rating: number;
-  reviews: number;
   inStock: boolean;
 }
 
@@ -23,28 +19,9 @@ interface ProductCardProps {
 
 const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   const navigate = useNavigate();
-  const { dispatch } = useCart();
 
-  const handleCardClick = (e: React.MouseEvent) => {
-    // Prevent navigation if clicking on action buttons
-    if ((e.target as HTMLElement).closest('button')) {
-      return;
-    }
+  const handleCardClick = () => {
     navigate(`/product/${product.id}`);
-  };
-
-  const addToCart = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    dispatch({
-      type: 'ADD_ITEM',
-      payload: {
-        id: product.id,
-        name: product.name,
-        price: product.price,
-        image: product.image,
-        size: product.size
-      }
-    });
   };
 
   return (
@@ -54,28 +31,16 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     >
       <div className="relative overflow-hidden">
         <img
-          src={product.image}
+          src={product.images[0]}
           alt={product.name}
           className="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-500"
         />
         <div className="absolute top-4 left-4">
           <span className="bg-purple-600 text-white px-3 py-1 rounded-full text-sm font-medium">
-            {product.gender}
+            {product.category}
           </span>
         </div>
-        <div className="absolute top-4 right-4">
-          <span className="bg-white/90 backdrop-blur-sm text-gray-800 px-3 py-1 rounded-full text-sm font-medium">
-            {product.fragranceType}
-          </span>
-        </div>
-        <button 
-          onClick={addToCart}
-          className="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-white text-gray-900 px-6 py-2 rounded-full font-medium opacity-0 group-hover:opacity-100 transition-all duration-300 hover:bg-gold-500 hover:text-white flex items-center gap-2"
-        >
-          <ShoppingBag className="h-4 w-4" />
-          Add to Cart
-        </button>
-        <button className="absolute top-4 right-16 p-2 bg-white/80 backdrop-blur-sm rounded-full hover:bg-white transition-colors opacity-0 group-hover:opacity-100">
+        <button className="absolute top-4 right-4 p-2 bg-white/80 backdrop-blur-sm rounded-full hover:bg-white transition-colors">
           <Heart className="h-5 w-5 text-gray-600 hover:text-red-500 transition-colors" />
         </button>
         <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
